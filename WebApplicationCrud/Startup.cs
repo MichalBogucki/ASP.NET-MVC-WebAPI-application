@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.OpenApi.Models;
+using WebApplicationCrud.Repository;
 
 namespace WebApplicationCrud
 {
@@ -24,6 +25,7 @@ namespace WebApplicationCrud
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddSingleton<IClientRepository, ClientRepository>();
             services.AddControllers();
             services.AddSwaggerGen(c =>
                 c.SwaggerDoc("v1", new OpenApiInfo
