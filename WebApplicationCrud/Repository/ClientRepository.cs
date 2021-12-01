@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using WebApplicationCrud.Model;
 
@@ -7,22 +8,25 @@ namespace WebApplicationCrud.Repository
 {
     public interface IClientRepository
     {
-        void InitializeClients();
-        public List<Client> GetClients();
-        public Client GetClientById(string id);
+        Task InitializeClients();
+        public Task<List<Client>> GetClients();
+        public Task<Client> GetClientById(string id);
+        void UpdateClientById(string id, Client client);
+        void AddClientById(string id, Client client);
+        void DeleteClientById(string id);
     }
 
     public class ClientRepository : IClientRepository
     {
         private readonly ILogger<ClientRepository> _logger;
-        private List<Client> _clients;
+        private List<Client> _clients = new List<Client>();
 
         public ClientRepository(ILogger<ClientRepository> logger)
         {
             _logger = logger;
         }
 
-        public void InitializeClients()
+        public async Task InitializeClients()
         {
             _clients =  new List<Client>
             {
@@ -39,15 +43,30 @@ namespace WebApplicationCrud.Repository
             };
         }
 
-        public List<Client> GetClients()
+        public async Task<List<Client>> GetClients()
         {
             return _clients;
         }      
         
-        public Client GetClientById(string id)
+        public async Task<Client> GetClientById(string id)
         {
             return _clients.FirstOrDefault(x=>x.Id == id);
         }
 
+        public void UpdateClientById(string id, Client client)
+        {
+            _clients.Find(x=>x.Id == id)!.Name = client.Name;
+        }
+
+        public void AddClientById(string id, Client client)
+        {
+            _clients.Add(client);
+        }
+
+        public void DeleteClientById(string id)
+        {
+            var toBeDeleted = _clients.FirstOrDefault(x => x.Id == id);
+            _clients.Remove(toBeDeleted);
+        }
     }
 }
