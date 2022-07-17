@@ -1,7 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using Microsoft.Extensions.Logging;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Logging;
 using WebApplicationCrud.Model;
 
 namespace WebApplicationCrud.Repository
@@ -28,7 +28,7 @@ namespace WebApplicationCrud.Repository
 
         public async Task InitializeClients()
         {
-            _clients =  new List<Client>
+            _clients = new List<Client>
             {
                 new Client
                 {
@@ -46,16 +46,16 @@ namespace WebApplicationCrud.Repository
         public async Task<List<Client>> GetClients()
         {
             return _clients;
-        }      
-        
+        }
+
         public async Task<Client> GetClientById(string id)
         {
-            return _clients.FirstOrDefault(x=>x.Id == id);
+            return _clients.FirstOrDefault(x => x.Id == id);
         }
 
         public void UpdateClientById(string id, Client client)
         {
-            _clients.Find(x=>x.Id == id)!.Name = client.Name;
+            _clients.Find(x => x.Id == id)!.Name = client.Name;
         }
 
         public void AddClientById(string id, Client client)

@@ -1,8 +1,7 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
+using System.Threading.Tasks;
 using WebApplicationCrud.Model;
 using WebApplicationCrud.Repository;
 
@@ -25,14 +24,14 @@ namespace WebApplicationCrud.Controllers
 
         // GET: api/<ClientController>
         [HttpGet]
-        public async Task<string>Get()
+        public async Task<string> Get()
         {
             _logger?.LogInformation("Get request triggered");
             var clients = await _clientRepository.GetClients();
             var json = JsonConvert.SerializeObject(clients);
             return json;
-        }    
-        
+        }
+
         [HttpGet("Initialize")]
         public async Task<string> Initialize()
         {
@@ -45,7 +44,7 @@ namespace WebApplicationCrud.Controllers
 
         // GET api/<ClientController>/5
         [HttpGet("{id}")]
-        public async Task<string>Get(string id)
+        public async Task<string> Get(string id)
         {
             _logger?.LogInformation($"Get {id} request triggered");
             var client = _clientRepository.GetClientById(id);
@@ -57,7 +56,7 @@ namespace WebApplicationCrud.Controllers
         [HttpPost]
         public async Task Post(string id, [FromBody] Client client)
         {
-            _clientRepository.UpdateClientById(client);
+            _clientRepository.UpdateClientById(id, client);
             _logger?.LogInformation("Post request triggered");
         }
 
