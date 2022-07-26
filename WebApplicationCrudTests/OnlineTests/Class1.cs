@@ -6,105 +6,109 @@ using System.Linq;
 namespace UnitTests
 {
     [TestClass]
-    public class UnitTest1
+    public class MovingTotal
     {
+        public List<int> Sequences = new List<int>();
+        public List<int> Appended = new List<int>();
 
-        private List<Block> Blocks = new List<Block>()
+        public void Append(int[] list)
         {
-            new Block(false,true,false),
-            new Block(true,false,false),
-            new Block(true,true,false),
-            new Block(false,true,false),
-            new Block(false,true,true)
-        };
-
-
-
-        [DataTestMethod]
-        [DataRow(3, 1, true, true, true)]
-        public void Google(int finalIndex, int correctDistance, bool wantGym, bool wantSchool, bool wantStore)
-        {
-            var results = new List<Distance>();
-
-            for (int i = 0; i < Blocks.Count; i++)
+            foreach (var element in list)
             {
-                results.Add(GetLeftRightMinimum(i, wantGym, wantSchool, wantStore));
+                Appended.Add(element);
             }
-            Assert.IsTrue(results.Single(r => r.Index == finalIndex).MinDistance == correctDistance);
-            var filteredResults = results.Where(r => r.Index != finalIndex);
-            Assert.IsFalse(filteredResults.Any(r => r.MinDistance <= correctDistance));
-        }
 
-        private Distance GetLeftRightMinimum(int currentIndex, bool wantGym, bool wantSchool, bool wantStore)
-        {
-            int leftDistanceTraversed = 0;
-            int rightDistanceTraversed = 0;
-            var temporaryBlock = new Block(false, false, false, Blocks.Count);
-
-            while (leftDistanceTraversed < Blocks.Count && rightDistanceTraversed < Blocks.Count)
+            var appendedCount = Appended.Count;
+            for (int i = Sequences.Count; i < appendedCount; i++)
             {
-                if (temporaryBlock.IsSatisfied())
+                if (appendedCount - i > 2)
                 {
-                    return new Distance(currentIndex, temporaryBlock.LeftDistance, temporaryBlock.RightDistance);
-                } //ToDo kontynuowac
-
+                    Sequences.Add(Appended[i]+Appended[i+1]+Appended[i+2]);
+                }
             }
         }
 
+        public bool Contains(int total)
+        {
+            return Sequences.Contains(total);
+        }
         
 
-    public class Block
-    {
-        public Block(bool hasGym, bool hasSchool, bool hasStore, int initialMaxDistance)
+        [DataTestMethod]
+        public void Google()
         {
-            Gym = hasGym;
-            School = hasSchool;
-            Store = hasStore;
-            LeftDistance = initialMaxDistance;
-            RightDistance = initialMaxDistance;
+            MovingTotal movingTotal = new MovingTotal();
+
+            movingTotal.Append(new int[] { 1, 2, 3, 4 });
+
+            Console.WriteLine(movingTotal.Contains(6));
+            Console.WriteLine(movingTotal.Contains(9));
+            Console.WriteLine(movingTotal.Contains(12));
+            Console.WriteLine(movingTotal.Contains(7));
+
+            movingTotal.Append(new int[] { 5 });
+
+            Console.WriteLine(movingTotal.Contains(6));
+            Console.WriteLine(movingTotal.Contains(9));
+            Console.WriteLine(movingTotal.Contains(12));
+            Console.WriteLine(movingTotal.Contains(7));
+
         }
 
-        public int LeftDistance { get; set; }
-        public int RightDistance { get; set; }
 
-        public bool Gym { get; set; }
-        public bool School { get; set; }
-        public bool Store { get; set; }
-
-        public bool IsSatisfied()
+        public class Block
         {
-            return Gym && School && Store;
-        }
-
-        public void ShareActivities(Block visitedBlock)
-        {
-            if (!this.Gym)
+            public Block(bool hasGym, bool hasSchool, bool hasStore, int initialMaxDistance)
             {
-                this.Gym = visitedBlock.Gym;
+                Gym = hasGym;
+                School = hasSchool;
+                Store = hasStore;
+                LeftDistance = initialMaxDistance;
+                RightDistance = initialMaxDistance;
             }
 
-            if (!this.School)
+            public int LeftDistance { get; set; }
+            public int RightDistance { get; set; }
+
+            public bool Gym { get; set; }
+            public bool School { get; set; }
+            public bool Store { get; set; }
+
+            public bool IsSatisfied()
             {
-                this.School = visitedBlock.School;
+                return Gym && School && Store;
             }
 
-            if (!this.Store)
+            public void ShareActivities(Block visitedBlock)
             {
-                this.Store = visitedBlock.Store;
+                if (!this.Gym)
+                {
+                    this.Gym = visitedBlock.Gym;
+                }
+
+                if (!this.School)
+                {
+                    this.School = visitedBlock.School;
+                }
+
+                if (!this.Store)
+                {
+                    this.Store = visitedBlock.Store;
+                }
             }
+
         }
 
-    }
-
-    public class Distance
-    {
-        public Distance(int index, int leftDistance, int rightDistance)
+        public class Distance
         {
-            Index = index;
-            MinDistance = Math.Min(leftDistance, rightDistance);
-        }
+            public Distance(int index, int leftDistance, int rightDistance)
+            {
+                Index = index;
+                MinDistance = Math.Min(leftDistance, rightDistance);
+            }
 
-        public int Index { get; set; }
-        public int MinDistance { get; set; }
+            public int Index { get; set; }
+            public int MinDistance { get; set; }
+        }
     }
 }

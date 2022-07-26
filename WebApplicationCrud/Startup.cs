@@ -35,14 +35,7 @@ namespace WebApplicationCrud
         {
             if (env.IsDevelopment())
             {
-                app.UseSwagger();
-                app.UseSwaggerUI(c
-                        =>
-                    {
-                        c.SwaggerEndpoint("/swagger/v1/swagger.json", "ExampleApi v1");
-                        c.RoutePrefix = string.Empty;
-                    }
-                );
+             
             }
             else
             {

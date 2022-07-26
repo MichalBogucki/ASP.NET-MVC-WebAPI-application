@@ -11,8 +11,8 @@ namespace WebApplicationCrud.Repository
         Task InitializeClients();
         public Task<List<Client>> GetClients();
         public Task<Client> GetClientById(string id);
-        void UpdateClientById(string id, Client client);
-        void AddClientById(string id, Client client);
+        void UpdateClientName(Client client);
+        void AddClientById(Client client);
         void DeleteClientById(string id);
     }
 
@@ -53,12 +53,12 @@ namespace WebApplicationCrud.Repository
             return _clients.FirstOrDefault(x => x.Id == id);
         }
 
-        public void UpdateClientById(string id, Client client)
+        public void UpdateClientName(Client client)
         {
-            _clients.Find(x => x.Id == id)!.Name = client.Name;
+            _clients.Find(x => x.Id == client.Id)!.Name = client.Name;
         }
 
-        public void AddClientById(string id, Client client)
+        public void AddClientById(Client client)
         {
             _clients.Add(client);
         }
